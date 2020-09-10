@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 """ App """
 
-from flask import Flask, jsonify
-from flask_cors import CORS
 from models import storage
 from api.v1.views import app_views
+from flask import Flask, Blueprint, make_response, jsonify
 from os import getenv
+from flask_cors import CORS
 
 app = Flask('v1')
 app.url_map.strict_slashes = False
