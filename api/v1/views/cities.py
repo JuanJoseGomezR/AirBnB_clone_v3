@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""City API endpoint"""
+"""City api endpoint"""
 from flask import abort, jsonify, request
 from api.v1.views import app_views
 from models import storage
