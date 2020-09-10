@@ -50,11 +50,11 @@ def create_state():
     return make_response(jsonify(st.to_dict()), 201)
 
 
-@app_views.route('/states', methods=['PUT'], strict_slashes=False)
-def update_states():
+@app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
+def update_states(state_id):
     """ Updates a specific state """
     getson = request.get_json()
-    if not derulo:
+    if not getson:
         abort(400, "Not a JSON")
     new_me = storage.get("State", state_id)
     if not new_me:
