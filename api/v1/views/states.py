@@ -25,15 +25,15 @@ def ret_states(state_id):
     return jsonify(getit.to_dict())
 
 
-@app_views.route('/states/<state_id>', methods=['DELETE'],
+@app_views.route('/states/<string:state_id>', methods=['DELETE'],
                  strict_slashes=False)
-def del_states(states_id):
-    getit = storage.get(State, state_id)
+def delete_states(state_id):
+    getit = storage.get("State", state_id)
     if getit is None:
         abort(404)
-    storage.delete(getit)
+    storage.delete()
     storage.save()
-    return make_response(jsonify({}), 200)
+    return (jsonify({}))
 
 
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
