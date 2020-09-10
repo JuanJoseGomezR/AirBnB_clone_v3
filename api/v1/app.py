@@ -1,26 +1,31 @@
 #!/usr/bin/python3
 """ App """
 
-import os
+from flask import Flask, jsonify
+from flask_cors import CORS
 from models import storage
 from api.v1.views import app_views
-from flask import Flask, Blueprint, jsonify, make_response
+from os import getenv
 
-
-app = Flask(__name__)
+app = Flask('v1')
+app.url_map.strict_slashes = False
 app.register_blueprint(app_views)
-
-
-@app.teardown_appcontext
-def teardown_appcontext(code):
-    """teardown_appcontext"""
-    storage.close()
+CORS(app, resources=r"/api/v1/*", origins="*")
 
 
 @app.errorhandler(404)
-def page_not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
+def not_found(error):
+    """Handle 404 not found errors and return json object"""
+    return jsonify({"error": "Not found"}), 404
+
+
+@app.teardown_appcontext
+def close_storage(*args, **kwargs):
+    """Clost app storage (FileStorage or DBStorage)"""
+    storage.close()
+
 
 if __name__ == "__main__":
-    app.run(host=os.getenv('HBNB_API_HOST', '0.0.0.0'),
-            port=int(os.getenv('HBNB_API_PORT', '5000')))
+    host = getenv('HBNB_API_HOST', '0.0.0.0')
+    port = getenv('HBNB_API_PORT', '5000')
+    app.run(host=host, port=int(port))
