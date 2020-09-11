@@ -89,23 +89,32 @@ class TestFileStorage(unittest.TestCase):
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get(self):
-        """Test for get method from dbstorage"""
-        state = State(name='Florida')
+        """Test get method for db storage"""
+        state = State(name='Valle Del Cauca')
         models.storage.new(state)
         models.storage.save()
         self.assertEqual(models.storage.get(State, state.id).id, state.id)
         models.storage.delete(state)
         models.storage.save()
-        self.assertEqual(models.storage.get('Excel', '987561'), None)
+        self.assertEqual(models.storage.get('Continents', '12345'), None)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count(self):
-        """ Test for count method from dbstorage """
-        count = storage.count(State)
-        self.assertEqual(models.storage.count("Nocount"), 0)
-        creat_state = State(name="NY")
-        creat_state.save()
-        creat_user = User(email="juan@hmt.com", password="password")
-        creat_user.save()
-        self.assertEqual(models.storage.count("State"), initial_count + 1)
-        self.assertEqual(models.storage.count(), initial_count + 2)
+        """Test count method from db_storage"""
+        count1 = models.storage.count(State)
+        count_all_1 = models.storage.count()
+        state = State(name='Valle Del Cauca')
+        models.storage.new(state)
+        models.storage.save()
+        user = User(email='user@gmail.com', password="12345")
+        models.storage.new(user)
+        models.storage.save()
+        count2 = models.storage.count(State)
+        count_all_2 = models.storage.count()
+        self.assertEqual((count2 - count1), 1)
+        self.assertEqual((count_all_2 - count_all_1), 2)
+        models.storage.delete(state)
+        models.storage.save()
+        models.storage.delete(user)
+        models.storage.save()
+        self.assertIs(type(models.storage.count()), int)
