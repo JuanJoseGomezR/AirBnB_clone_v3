@@ -105,4 +105,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(models.storage.count("Nocount"), 0)
         creat_state = State(name="NY")
         creat_state.save()
+        creat_user = User(email="juan@hmt.com", password="password")
+        creat_user.save()
         self.assertEqual(models.storage.count("State"), initial_count + 1)
+        self.assertEqual(models.storage.count(), initial_count + 2)
